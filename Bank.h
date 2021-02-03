@@ -6,42 +6,62 @@
 #include <fstream>
 #include <algorithm>
 class Bank {
+
+	void if_file_empty(std::string file) {
+		std::ofstream ifstream(file, std::ios::app);
+		ifstream << "Bank One" << std::endl;
+		ifstream.close();
+
+	}
 public:
 	Bank(std::string file){
-		std::ifstream fstream(file,std::ios::app);
-		getline(fstream,Bank_name);
-		std::string sec_number;
-		char type;
-		Account* temp;
-		while (!fstream.eof()) {
-			fstream >> sec_number;
-			type = sec_number[sec_number.size() - 1];
-			if (type == 'T') {
-				{
-					Trust_Account t1{ "XXXX" };
-					fstream >> t1;
-					temp = new Trust_Account(t1);
-				}
-				accounts.push_back(temp);
-			}
-			else if(type == 'S') {
-				{
-					Savings_Account t1{ "XXXX" };
-					fstream >> t1;
-					temp = new Savings_Account(t1);
-				}
-				accounts.push_back(temp);
-			}
-			else if(type=='C'){
-				{
-					Checking_Account t1{ "XXXX" };
-					fstream >> t1;
-					temp = new Checking_Account(t1);
-				}
-				accounts.push_back(temp);
-			}
-			sec_number = " ";
+		std::ifstream ifstream(file,std::ios::app);
+		getline(ifstream, Bank_name);
+		if (Bank_name=="") {
+			Bank_name = "Bank One";
+			if_file_empty(file);
+			if_file_empty("backUp.txt");
+		}
+		else {
 			
+			std::string sec_number;
+			char type;
+			Account* temp;
+			while (!ifstream.eof()) {
+				ifstream >> sec_number;
+				if (!(sec_number.empty())) {
+					type = sec_number[sec_number.size() - 1];
+				}
+				else {
+					type = ' ';
+				}
+				if (type == 'T') {
+					{
+						Trust_Account t1{ "XXXX" };
+						ifstream >> t1;
+						temp = new Trust_Account(t1);
+					}
+					accounts.push_back(temp);
+				}
+				else if (type == 'S') {
+					{
+						Savings_Account t1{ "XXXX" };
+						ifstream >> t1;
+						temp = new Savings_Account(t1);
+					}
+					accounts.push_back(temp);
+				}
+				else if (type == 'C') {
+					{
+						Checking_Account t1{ "XXXX" };
+						ifstream >> t1;
+						temp = new Checking_Account(t1);
+					}
+					accounts.push_back(temp);
+				}
+				sec_number = " ";
+
+			}
 		}
 	}
 
@@ -73,12 +93,12 @@ public:
 				break;
 			case 5:display();
 				break;
-			case 0:std::cout << "Exit" << std::endl;
+			case 6:std::cout << "Exit" << std::endl;
 				break;
 
 			}
 
-		} while (ans != 0);
+		} while (ans != 6);
 	}
 
 	
@@ -444,4 +464,5 @@ private:
 	}
 };
 
+#endif BANK_H
 #endif BANK_H
